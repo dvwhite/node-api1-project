@@ -1,6 +1,7 @@
 // Create and configure the server
 const express = require('express');
-const server = express.server();
+const server = express();
+const cors = require('cors');
 server.use(express.json());
 server.use(cors()); // For the stretch
 const port = 5000;
