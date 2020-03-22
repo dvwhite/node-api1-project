@@ -13,7 +13,7 @@ const addUser = server => {
     // If there are missing fields, alert the user and send back a 400 code
     if (missingFields.length > 0) {
       const missingString = utils.formatFieldString(missingFields);
-      req
+      res
         .status(400)
         .json({
           errorMessage: "Please provide " + missingString + " for the user"
@@ -127,7 +127,7 @@ const updateUser = server => {
     // If there are missing fields, alert the user and send back a 400 code
     if (missingFields.length > 0) {
       const missingString = utils.formatFieldString(missingFields);
-      req
+      res
         .status(400)
         .json({
           errorMessage: "Please provide " + missingString + " for the user"
