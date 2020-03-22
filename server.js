@@ -106,6 +106,44 @@ server.delete('/api/users/:id', (req, res) => {
   }
 });
 
+// Update a single user
+server.put("/api/users/:id", (req, res) => {
+  // Check for missing fields, if any
+  const actualFields = Object.keys(req.body);
+  const required = ["name", "bio"];
+  const missingFields = utils.validateHasFields(required, actualFields);
+  // If there are missing fields, alert the user and send back a 400 code
+  if (missingFields.length > 0) {
+    const missingString = utils.formatFieldString(missingFields);
+    res.status(400).json({
+      errorMessage: "Please provide " + missingString + " for the user"
+    });
+    return;
+  }
+
+  // Check if the user with the specified is found, and if not, send back a 404
+  const user = data.users.find(
+    item => String(item.id) === String(req.params.id)
+  );
+  if (user) {
+    // Notify user if there's an error in retrieving the user from the database
+    try {
+      data.users = [
+        ...data.users.filter(user => String(user.id) !== String(req.params.id)),
+        req.body
+      ];
+      res.status(200).json(data.users);
+    } catch (err) {
+      res.status(500).json({
+        errorMessage: "The user information could not be retrieved."
+      });
+    }
+  } else {
+    res
+      .status(404)
+      .json({ message: "The user with the specified ID does not exist." });
+  }
+});
 
 // Listen to port
 server.listen(port, () => {
