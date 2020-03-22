@@ -85,6 +85,26 @@ server.get('/api/users/:id', (req, res) => {
   }
 });
 
+// Delete user
+server.delete('/api/users/:id', (req, res) => {
+  // Check if the user with the specified is found, and if not, send back a 404
+  const user = data.users.find(item => String(item.id) === String(req.params.id));
+  if (!user) {
+    res
+      .status(404)
+      .json({ message: "The user with the specified ID does not exist." });
+  } else {
+    // Notify user if there's an error in retrieving the user from the database
+    try {
+      data.users = data.users.filter(item => String(item.id) !== String(req.params.id));
+      res.status(200).json(data.users);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ errorMessage: "The user information could not be retrieved." });
+    }
+  }
+});
 
 
 // Listen to port
