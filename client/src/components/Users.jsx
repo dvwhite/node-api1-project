@@ -26,12 +26,18 @@ const Users = () => {
     setUsers([...users.filter((user) => Number(user.id) !== Number(id))]);
   };
 
+  const editUser = (id, editedUser) => {
+    setUsers([
+      ...users.filter((user) => Number(user.id) !== Number(id)),
+      editedUser,
+    ]);
+  };
+
   // Get the users from the API backend
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/users")
       .then((res) => {
-        console.log("Users:", res.data);
         setUsers(res.data);
       })
       .catch((err) => console.error(err.response));
@@ -40,7 +46,7 @@ const Users = () => {
   return (
     <Wrapper>
       {users?.map((user, idx) => (
-        <User data={user} removeUser={removeUser} key={idx} />
+        <User data={user} removeUser={removeUser} editUser={editUser} key={idx} />
       ))}
       <AddUser addToUsers={addToUsers} />
     </Wrapper>
